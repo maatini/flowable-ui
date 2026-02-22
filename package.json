@@ -1,0 +1,26 @@
+{
+  "name": "flowable-ui",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "build": "nuxt build",
+    "dev": "nuxt dev",
+    "generate": "nuxt generate",
+    "preview": "nuxt preview",
+    "postinstall": "nuxt prepare"
+  },
+  "dependencies": {
+    "@nuxt/ui": "^4.4.0",
+    "@nuxtjs/i18n": "^10.2.3",
+    "@pinia/nuxt": "^0.11.3",
+    "@vueuse/nuxt": "^14.2.1",
+    "axios": "^1.13.5",
+    "lucide-vue-next": "^0.575.0",
+    "nuxt": "^4.3.1",
+    "pinia-plugin-persistedstate": "^4.7.1",
+    "vue": "^3.5.28",
+    "vue-router": "^4.6.4",
+    "zod": "^4.3.6",
+    "zod-i18n": "^0.0.1"
+  }
+}

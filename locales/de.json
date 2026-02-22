@@ -1,0 +1,33 @@
+{
+    "common": {
+        "login": "Anmelden",
+        "logout": "Abmelden",
+        "dashboard": "Dashboard",
+        "tasks": "Aufgaben",
+        "processes": "Prozesse",
+        "history": "Historie",
+        "admin": "Administration",
+        "username": "Benutzername",
+        "password": "Passwort",
+        "rememberMe": "Angemeldet bleiben",
+        "submit": "Absenden",
+        "cancel": "Abbrechen",
+        "loading": "Lädt...",
+        "search": "Suchen",
+        "save": "Speichern",
+        "complete": "Abschließen",
+        "claim": "Übernehmen"
+    },
+    "dashboard": {
+        "title": "Dashboard",
+        "summary": "Prozess- und Aufgabenübersicht"
+    },
+    "tasks": {
+        "title": "Meine Aufgaben",
+        "noTasks": "Keine Aufgaben gefunden.",
+        "priority": "Priorität",
+        "dueDate": "Fälligkeitsdatum",
+        "assignee": "Bearbeiter",
+        "status": "Status"
+    }
+}

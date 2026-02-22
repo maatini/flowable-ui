@@ -1,0 +1,33 @@
+{
+    "common": {
+        "login": "Login",
+        "logout": "Logout",
+        "dashboard": "Dashboard",
+        "tasks": "Tasks",
+        "processes": "Processes",
+        "history": "History",
+        "admin": "Admin",
+        "username": "Username",
+        "password": "Password",
+        "rememberMe": "Remember me",
+        "submit": "Submit",
+        "cancel": "Cancel",
+        "loading": "Loading...",
+        "search": "Search",
+        "save": "Save",
+        "complete": "Complete",
+        "claim": "Claim"
+    },
+    "dashboard": {
+        "title": "Dashboard",
+        "summary": "Process and Task Overview"
+    },
+    "tasks": {
+        "title": "My Tasks",
+        "noTasks": "No tasks found.",
+        "priority": "Priority",
+        "dueDate": "Due Date",
+        "assignee": "Assignee",
+        "status": "Status"
+    }
+}
