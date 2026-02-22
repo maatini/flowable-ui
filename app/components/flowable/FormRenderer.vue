@@ -6,7 +6,13 @@ const props = defineProps<{
 
 const emit = defineEmits(['update:modelValue'])
 
-const formData = useVModel(props, 'modelValue', emit)
+// Use a local reactive copy to handle input state
+const localData = ref({ ...props.modelValue })
+
+// Keep local state in sync with incoming props
+watch(() => props.modelValue, (newVal) => {
+  localData.value = { ...newVal }
+}, { deep: true })
 
 const getComponent = (type: string) => {
   switch (type) {
@@ -15,14 +21,19 @@ const getComponent = (type: string) => {
       return 'UInput'
     case 'integer':
     case 'number':
-      return 'UInput' // maybe type="number"
+      return 'UInput' 
     case 'boolean':
       return 'UCheckbox'
     case 'date':
-      return 'UInput' // type="date"
+      return 'UInput' 
     default:
       return 'UInput'
   }
+}
+
+const onUpdate = (fieldId: string, value: any) => {
+  localData.value[fieldId] = value
+  emit('update:modelValue', { ...localData.value })
 }
 </script>
 
@@ -32,7 +43,8 @@ const getComponent = (type: string) => {
       <UFormGroup :label="field.name" :name="field.id" :help="field.placeholder">
         <component
           :is="getComponent(field.type)"
-          v-model="formData[field.id]"
+          :model-value="localData[field.id]"
+          @update:model-value="(val: any) => onUpdate(field.id, val)"
           :placeholder="field.placeholder"
           :type="field.type === 'date' ? 'date' : (field.type === 'integer' ? 'number' : 'text')"
           class="w-full"

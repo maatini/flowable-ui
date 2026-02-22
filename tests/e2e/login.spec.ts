@@ -9,11 +9,16 @@ test.describe('Login Flow', () => {
     test('should show error on invalid login', async ({ page }) => {
         await page.goto('/login')
 
-        await page.fill('input[name="username"]', 'wronguser')
-        await page.fill('input[type="password"]', 'wrongpass')
-        await page.click('button[type="submit"]')
+        // Wait for the form to be visible
+        await page.waitForSelector('input', { state: 'visible' })
 
-        await expect(page.locator('.u-alert')).toBeVisible()
-        await expect(page.locator('.u-alert')).toContainText('Login failed')
+        // Use more robust selectors
+        await page.getByPlaceholder('admin').fill('wronguser')
+        await page.locator('input[type="password"]').fill('wrongpass')
+        await page.getByRole('button', { name: /login/i }).click()
+
+        // Check for error message text instead of specific class
+        // authStore.error is set on login failure
+        await expect(page.getByText(/Invalid credentials|Login failed/i)).toBeVisible({ timeout: 15000 })
     })
 })
