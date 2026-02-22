@@ -22,6 +22,8 @@ export const useFlowable = () => {
         getTask: (id: string) => apiFetch(`/runtime/tasks/${id}`),
         getProcessInstances: (params?: any) => apiFetch('/runtime/process-instances', { query: params }),
         getProcessDefinitions: (params?: any) => apiFetch('/repository/process-definitions', { query: params }),
+        getProcessDefinition: (id: string) => apiFetch(`/repository/process-definitions/${id}`),
+        getProcessModel: (id: string) => apiFetch(`/repository/process-definitions/${id}/resourcedata`, { parseResponse: (txt) => txt }),
         startProcess: (data: any) => apiFetch('/runtime/process-instances', { method: 'POST', body: data }),
         completeTask: (id: string, data: any) => apiFetch(`/runtime/tasks/${id}`, { method: 'POST', body: { action: 'complete', ...data } }),
         // Add more as needed
