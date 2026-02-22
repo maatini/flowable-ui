@@ -1,0 +1,19 @@
+{
+    "$schema": "https://raw.githubusercontent.com/jetpack-io/devbox/main/.schema/devbox.schema.json",
+    "packages": [
+        "nodejs_22",
+        "git",
+        "typescript"
+    ],
+    "shell": {
+        "init_hook": [
+            "echo 'Welcome to the Flowable Nuxt 4 dev environment!'",
+            "echo 'Run \"npm install\" to get started, then \"npm run dev\" to start the development server.'"
+        ],
+        "scripts": {
+            "dev": "npm run dev",
+            "build": "npm run build",
+            "typecheck": "npm run typecheck"
+        }
+    }
+}
