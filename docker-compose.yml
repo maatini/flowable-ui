@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  flowable-db:
+    image: postgres:15-alpine
+    container_name: flowable-db
+    environment:
+      - POSTGRES_PASSWORD=flowable
+      - POSTGRES_USER=flowable
+      - POSTGRES_DB=flowable
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready -U flowable" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  flowable-ui:
+    image: flowable/flowable-rest:7.0.0
+    container_name: flowable-ui
+    depends_on:
+      flowable-db:
+        condition: service_healthy
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://flowable-db:5432/flowable
+      - SPRING_DATASOURCE_USERNAME=flowable
+      - SPRING_DATASOURCE_PASSWORD=flowable
+      - SPRING_DATASOURCE_DRIVER_CLASS_NAME=org.postgresql.Driver
+      - FLOWABLE_REST_APP_ADMIN_USER-NAME=admin
+      - FLOWABLE_REST_APP_ADMIN_PASSWORD=test
+    ports:
+      - "8080:8080"
+    healthcheck:
+      test: [ "CMD", "curl", "-f", "http://localhost:8080/flowable-rest/service/info" ]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+
+networks:
+  default:
+    name: flowable-network

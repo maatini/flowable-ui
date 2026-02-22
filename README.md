@@ -57,6 +57,18 @@ A production-ready, high-performance Web-UI for **Flowable BPM (6.8+ / 7.x)** bu
     npm run dev
     ```
 
+### Docker Environment (Flowable 7)
+
+If you don't have a Flowable instance running, you can start one using the provided Docker Compose file:
+```bash
+docker-compose up -d
+```
+This will start:
+-   **Flowable REST**: Available at `http://localhost:8080/flowable-rest`
+-   **PostgreSQL**: Database for Flowable data.
+
+The default credentials are `admin` / `test`.
+
 ### Devbox Environment
 
 Alternatively, use [Devbox](https://www.jetpack.io/devbox) for a reproducible Nix-based environment:

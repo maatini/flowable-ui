@@ -28,8 +28,7 @@ export default defineNuxtConfig({
     ],
     defaultLocale: 'en',
     langDir: 'locales/',
-    strategy: 'no_prefix',
-    lazy: true
+    strategy: 'no_prefix'
   },
 
   // Pinia 
