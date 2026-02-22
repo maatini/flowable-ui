@@ -3,6 +3,5 @@
     <NuxtPage />
   </NuxtLayout>
 
-  <UNotifications />
-  <UModals />
+  <UToaster />
 </template>

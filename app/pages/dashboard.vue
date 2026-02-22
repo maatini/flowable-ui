@@ -13,64 +13,136 @@ const stats = ref([
   { label: 'Alerts', value: '0', icon: 'i-heroicons-exclamation-triangle' }
 ])
 
-const { data: tasks, pending } = await useAsyncData('dashboard-tasks', () => flowable.getTasks({ size: 5 }))
-const { data: processes } = await useAsyncData('dashboard-processes', () => flowable.getProcessInstances({ size: 5 }))
+const { data: response, pending, refresh: refreshTasks } = await useAsyncData('dashboard-tasks', () => flowable.getTasks({ size: 5 }))
+const { data: procResponse, refresh: refreshProcesses } = await useAsyncData('dashboard-processes', () => flowable.getProcessInstances({ size: 5 }))
+
+
+const toast = useToast()
+
+const startWorkflow = async () => {
+  try {
+    await flowable.startProcess({
+      processDefinitionKey: 'simpleProcess'
+    })
+    toast.add({
+      title: 'Success',
+      description: 'Process started successfully',
+      color: 'success'
+    })
+    await Promise.all([refreshTasks(), refreshProcesses()])
+  } catch (error) {
+    toast.add({
+      title: 'Error',
+      description: 'Failed to start process',
+      color: 'error'
+    })
+  }
+}
+
+const dashColumns = [
+  { id: 'name', accessorKey: 'name', header: 'Task Name' },
+  { id: 'createTime', accessorKey: 'createTime', header: 'Created' }
+]
 
 watchEffect(() => {
-  if (tasks.value) stats.value[0].value = (tasks.value as any).total.toString()
-  if (processes.value) stats.value[1].value = (processes.value as any).total.toString()
+  if (response.value) {
+    stats.value[0].value = (response.value as any).total.toString()
+  }
+  if (procResponse.value) {
+    stats.value[1].value = (procResponse.value as any).total.toString()
+  }
 })
 </script>
 
 <template>
-  <div class="space-y-8">
+  <div class="space-y-10 pb-20">
     <!-- KPI Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-      <UCard v-for="stat in stats" :key="stat.label" class="ring-1 ring-gray-200 dark:ring-gray-800">
-        <div class="flex items-center gap-4">
-          <div class="p-3 bg-primary-50 dark:bg-primary-900/20 rounded-lg">
-            <UIcon :name="stat.icon" class="size-6 text-primary-500" />
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <UCard 
+        v-for="stat in stats" 
+        :key="stat?.label" 
+        class="border-none shadow-xl hover:scale-[1.03] transition-transform duration-300 bg-white/80 dark:bg-white/5 backdrop-blur-xl ring-1 ring-white/10"
+      >
+        <div class="flex items-center gap-5">
+          <div class="p-4 bg-primary-500/10 dark:bg-primary-500/20 rounded-2xl shadow-inner shadow-primary-500/10">
+            <UIcon :name="stat?.icon" class="size-7 text-primary-500 dark:text-primary-400" />
           </div>
           <div>
-            <p class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ stat.label }}</p>
-            <p class="text-2xl font-bold">{{ stat.value }}</p>
+            <p class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-1">{{ stat?.label }}</p>
+            <p class="text-3xl font-black tracking-tighter text-slate-800 dark:text-white">{{ stat?.value || '0' }}</p>
           </div>
         </div>
       </UCard>
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
       <!-- Recent Tasks -->
-      <UCard class="ring-1 ring-gray-200 dark:ring-gray-800">
+      <UCard 
+        class="border-none shadow-2xl bg-white/80 dark:bg-white/5 backdrop-blur-xl ring-1 ring-white/10"
+        :ui="{ header: 'border-white/5' }"
+      >
         <template #header>
-          <div class="flex items-center justify-between">
-            <h3 class="font-bold">Recent Tasks</h3>
-            <UButton to="/tasks" variant="link" color="primary">View all</UButton>
+          <div class="flex items-center justify-between p-2">
+            <div>
+              <h3 class="text-xl font-black tracking-tight dark:text-white">Recent Tasks</h3>
+              <p class="text-xs text-slate-500">Action items requiring attention</p>
+            </div>
+            <UButton to="/tasks" variant="subtle" color="primary" icon="i-heroicons-arrow-right-circle" class="rounded-full">View all</UButton>
           </div>
         </template>
         
-        <UTable :rows="tasks?.data || []" :loading="pending">
-          <template #name-data="{ row }">
-            <NuxtLink :to="`/tasks/${row.id}`" class="text-primary-500 hover:underline">
-              {{ row.name || 'Untitled Task' }}
+        <UTable 
+          :data="(response as any)?.data || []" 
+          :columns="dashColumns"
+          :loading="pending"
+        >
+          <template #name-cell="{ cell }">
+            <NuxtLink :to="`/tasks/${cell.row.original.id}`" class="font-bold text-primary-500 hover:text-primary-400 transition-colors">
+              {{ cell.row.original.name || 'Untitled Task' }}
             </NuxtLink>
           </template>
-          <template #createTime-data="{ row }">
-            {{ new Date(row.createTime).toLocaleString() }}
+          <template #createTime-cell="{ cell }">
+            <span class="text-xs font-medium text-slate-500">
+              {{ cell.row.original.createTime ? new Date(cell.row.original.createTime).toLocaleDateString() : 'N/A' }}
+            </span>
           </template>
         </UTable>
       </UCard>
 
       <!-- Quick Actions -->
-      <UCard class="ring-1 ring-gray-200 dark:ring-gray-800">
+      <UCard class="border-none shadow-2xl bg-white/80 dark:bg-white/5 backdrop-blur-xl ring-1 ring-white/10 overflow-hidden">
         <template #header>
-          <h3 class="font-bold">Quick Actions</h3>
+          <div class="p-2">
+            <h3 class="text-xl font-black tracking-tight dark:text-white">Quick Actions</h3>
+            <p class="text-xs text-slate-500">Frequently used operations</p>
+          </div>
         </template>
-        <div class="grid grid-cols-2 gap-4">
-          <UButton icon="i-heroicons-plus-circle" class="justify-center">Start Process</UButton>
-          <UButton icon="i-heroicons-user-group" variant="outline" class="justify-center">Team Tasks</UButton>
-          <UButton icon="i-heroicons-document-text" variant="outline" class="justify-center">Reports</UButton>
-          <UButton icon="i-heroicons-magnifying-glass" variant="outline" class="justify-center">Find Process</UButton>
+        
+        <div class="grid grid-cols-2 gap-6 p-2">
+          <UButton 
+            v-for="action in ([
+              { label: 'Start Process', icon: 'i-heroicons-plus-circle', color: 'primary', variant: 'solid', action: startWorkflow },
+              { label: 'Team Tasks', icon: 'i-heroicons-user-group', variant: 'subtle', color: 'neutral' },
+              { label: 'Reports', icon: 'i-heroicons-document-text', variant: 'subtle', color: 'neutral' },
+              { label: 'Find Process', icon: 'i-heroicons-magnifying-glass', variant: 'subtle', color: 'neutral' }
+            ] as const)"
+            :key="action.label"
+            :icon="action.icon"
+            :variant="action.variant"
+            :color="action.color"
+            @click="(action as any).action?.()"
+            class="justify-center py-6 text-sm font-black rounded-3xl hover:scale-[1.05] transition-transform active:scale-95"
+          >
+            {{ action.label }}
+          </UButton>
+        </div>
+        
+        <div class="mt-10 p-6 bg-primary-500/5 rounded-3xl border border-primary-500/10 flex items-center justify-between">
+          <div>
+            <h4 class="font-bold text-primary-400">Need Help?</h4>
+            <p class="text-xs text-slate-500">Check the Flowable documentation</p>
+          </div>
+          <UButton icon="i-heroicons-book-open" variant="ghost" color="primary" />
         </div>
       </UCard>
     </div>

@@ -53,4 +53,34 @@ describe('useFlowable', () => {
             body: { action: 'complete', values: { approved: true } }
         })
     })
+
+    it('calls the correct endpoint when fetching process instances', async () => {
+        const { getProcessInstances } = useFlowable()
+        mockFetch.mockResolvedValueOnce({ data: [] })
+
+        await getProcessInstances({ active: true })
+
+        expect(mockFetch).toHaveBeenCalledWith('/runtime/process-instances', { query: { active: true } })
+    })
+
+    it('calls the correct endpoint when fetching process definitions', async () => {
+        const { getProcessDefinitions } = useFlowable()
+        mockFetch.mockResolvedValueOnce({ data: [] })
+
+        await getProcessDefinitions({ latest: true })
+
+        expect(mockFetch).toHaveBeenCalledWith('/repository/process-definitions', { query: { latest: true } })
+    })
+
+    it('calls the correct endpoint when starting a process instance', async () => {
+        const { startProcess } = useFlowable()
+        mockFetch.mockResolvedValueOnce({ id: 'proc-123' })
+
+        await startProcess({ processDefinitionKey: 'myProcess' })
+
+        expect(mockFetch).toHaveBeenCalledWith('/runtime/process-instances', {
+            method: 'POST',
+            body: { processDefinitionKey: 'myProcess' }
+        })
+    })
 })

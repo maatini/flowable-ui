@@ -1,29 +1,17 @@
+import { proxyRequest } from 'h3'
+
 export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig()
     const path = event.path.replace(/^\/api\/flowable/, '')
-    const method = event.method
-    const body = method !== 'GET' ? await readBody(event).catch(() => undefined) : undefined
-    const query = getQuery(event)
+    const target = `${config.flowableRestUrl}${path}`
 
-    // Use Basic Auth from config for Flowable
+    // Inject the internal Flowable credentials into the outgoing request
     const auth = Buffer.from(`${config.flowableAuthUser}:${config.flowableAuthPassword}`).toString('base64')
 
-    try {
-        const response = await $fetch(`${config.flowableRestUrl}${path}`, {
-            method,
-            body,
-            query,
-            headers: {
-                Authorization: `Basic ${auth}`,
-                'Content-Type': 'application/json',
-            },
-        })
-        return response
-    } catch (error: any) {
-        throw createError({
-            statusCode: error.response?.status || 500,
-            statusMessage: error.response?.statusText || 'Flowable API Error',
-            data: error.data,
-        })
-    }
+    // Nitro's proxyRequest handles streams, headers, and methods correctly
+    return proxyRequest(event, target, {
+        headers: {
+            Authorization: `Basic ${auth}`
+        }
+    })
 })

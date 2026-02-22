@@ -40,7 +40,7 @@ const onUpdate = (fieldId: string, value: any) => {
 <template>
   <div class="space-y-6">
     <div v-for="field in form.fields" :key="field.id">
-      <UFormGroup :label="field.name" :name="field.id" :help="field.placeholder">
+      <UFormField :label="field.name" :name="field.id" :description="field.placeholder">
         <component
           :is="getComponent(field.type)"
           :model-value="localData[field.id]"
@@ -49,7 +49,7 @@ const onUpdate = (fieldId: string, value: any) => {
           :type="field.type === 'date' ? 'date' : (field.type === 'integer' ? 'number' : 'text')"
           class="w-full"
         />
-      </UFormGroup>
+      </UFormField>
     </div>
   </div>
 </template>

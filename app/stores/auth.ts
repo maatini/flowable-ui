@@ -1,5 +1,5 @@
 import { defineStore } from 'pinia'
-import type { FlowableUser } from '~/shared/types/flowable'
+import type { FlowableUser } from '../../shared/types/flowable'
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({
@@ -16,8 +16,8 @@ export const useAuthStore = defineStore('auth', {
 
             try {
                 // In a real application, you might call a dedicated auth endpoint
-                // For Flowable Basic Auth, we can verify by calling /idm/users/{id}
-                const data = await $fetch<FlowableUser>(`/api/flowable/idm/users/${credentials.username}`)
+                // For Flowable Basic Auth, we can verify by calling /identity/users/{id}
+                const data = await $fetch<FlowableUser>(`/api/flowable/identity/users/${credentials.username}`)
 
                 this.user = data
                 this.isAuthenticated = true
@@ -39,5 +39,5 @@ export const useAuthStore = defineStore('auth', {
             navigateTo('/login')
         }
     },
-    persist: true // Enabled by pinia-plugin-persistedstate
+    persist: true
 })

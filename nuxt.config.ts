@@ -1,7 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
-  devtools: { enabled: true },
+  devtools: { enabled: false },
   devServer: {
     port: 3000
   },
@@ -11,12 +11,17 @@ export default defineNuxtConfig({
     compatibilityVersion: 4,
   },
 
+  ssr: false,
+
   modules: [
     '@nuxt/ui',
     '@pinia/nuxt',
     '@nuxtjs/i18n',
-    '@vueuse/nuxt'
+    '@vueuse/nuxt',
+    'pinia-plugin-persistedstate/nuxt'
   ],
+
+  css: ['~/assets/css/main.css'],
 
   // @nuxt/ui configuration
   colorMode: {
