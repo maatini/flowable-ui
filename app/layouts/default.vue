@@ -15,18 +15,8 @@ const toggleColorMode = () => {
   colorMode.preference = colorMode.value === 'dark' ? 'light' : 'dark'
 }
 
-const userMenuItems = [
-  [{
-    label: auth.user?.firstName || 'User',
-    slot: 'account',
-    disabled: true
-  }],
-  [{
-    label: 'Sign out',
-    icon: 'i-heroicons-arrow-left-on-rectangle',
-    click: () => auth.logout()
-  }]
-]
+// User menu removed as auth is disabled
+const userMenuItems = []
 </script>
 
 <template>
@@ -65,16 +55,10 @@ const userMenuItems = [
           />
         </div>
 
-        <UDropdownMenu :items="userMenuItems" :content="{ align: 'start', side: 'top', class: 'glass-dark' }">
-          <UButton
-            variant="subtle"
-            color="primary"
-            class="w-full justify-start py-3 px-4 rounded-2xl font-bold shadow-lg"
-            icon="i-heroicons-user-circle"
-          >
-            {{ auth.user?.firstName || 'Account' }}
-          </UButton>
-        </UDropdownMenu>
+        <div class="py-3 px-4 rounded-2xl font-bold bg-white/5 border border-white/5 flex items-center gap-2">
+          <UIcon name="i-heroicons-user-circle" class="size-5 text-primary-400" />
+          <span class="text-white text-sm">Guest Mode</span>
+        </div>
       </div>
     </aside>
 

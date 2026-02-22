@@ -1,17 +1,16 @@
 <script setup lang="ts">
 definePageMeta({ 
-  title: 'Admin - Identity Management',
-  middleware: ['auth'] 
+  title: 'Admin - Identity Management'
 })
 
 const { data: users } = await useAsyncData('idm-users', () => $fetch('/api/flowable/idm/users'))
 const { data: groups } = await useAsyncData('idm-groups', () => $fetch('/api/flowable/idm/groups'))
 
 const userColumns = [
-  { key: 'id', label: 'ID' },
-  { key: 'firstName', label: 'First Name' },
-  { key: 'lastName', label: 'Last Name' },
-  { key: 'email', label: 'Email' }
+  { id: 'id', accessorKey: 'id', header: 'ID' },
+  { id: 'firstName', accessorKey: 'firstName', header: 'First Name' },
+  { id: 'lastName', accessorKey: 'lastName', header: 'Last Name' },
+  { id: 'email', accessorKey: 'email', header: 'Email' }
 ]
 </script>
 
@@ -26,7 +25,7 @@ const userColumns = [
             <UButton icon="i-heroicons-user-plus" size="xs">Add User</UButton>
           </div>
         </template>
-        <UTable :rows="users?.data || []" :columns="userColumns" />
+        <UTable :data="(users as any)?.data || []" :columns="userColumns as any" />
       </UCard>
 
       <!-- Groups List -->
@@ -37,7 +36,7 @@ const userColumns = [
             <UButton icon="i-heroicons-plus" size="xs">Create Group</UButton>
           </div>
         </template>
-        <UTable :rows="groups?.data || []" :columns="[{key: 'name', label: 'Name'}, {key: 'type', label: 'Type'}]" />
+        <UTable :data="(groups as any)?.data || []" :columns="[{id: 'name', accessorKey: 'name', header: 'Name'}, {id: 'type', accessorKey: 'type', header: 'Type'}] as any" />
       </UCard>
     </div>
   </div>

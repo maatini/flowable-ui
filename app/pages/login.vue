@@ -13,6 +13,13 @@ const state = reactive({
   rememberMe: false
 })
 
+// Always redirect if somehow reaching this page
+watchEffect(() => {
+  if (auth.isAuthenticated) {
+    navigateTo('/dashboard')
+  }
+})
+
 async function handleLogin() {
   const success = await auth.login(state)
   if (success) {

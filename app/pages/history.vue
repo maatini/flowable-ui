@@ -6,9 +6,9 @@ const { data: historicTasks } = await useAsyncData('hist-tasks', () => $fetch('/
 const { data: historicProcesses } = await useAsyncData('hist-procs', () => $fetch('/api/flowable/query/historic-process-instances', { method: 'POST', body: { finished: true } }))
 
 const taskColumns = [
-  { key: 'name', label: 'Task Name' },
-  { key: 'endTime', label: 'Completed At' },
-  { key: 'durationInMillis', label: 'Duration' }
+  { id: 'name', accessorKey: 'name', header: 'Task Name' },
+  { id: 'endTime', accessorKey: 'endTime', header: 'Completed At' },
+  { id: 'durationInMillis', accessorKey: 'durationInMillis', header: 'Duration' }
 ]
 </script>
 
@@ -16,21 +16,21 @@ const taskColumns = [
   <div class="space-y-8">
     <UCard class="ring-1 ring-gray-200 dark:ring-gray-800">
       <template #header><h3 class="font-bold">Completed Tasks</h3></template>
-      <UTable :rows="historicTasks?.data || []" :columns="taskColumns">
-        <template #endTime-data="{ row }">
-            {{ new Date(row.endTime).toLocaleString() }}
+      <UTable :data="(historicTasks as any)?.data || []" :columns="taskColumns as any">
+        <template #endTime-cell="{ cell }">
+            {{ new Date(cell.row.original.endTime).toLocaleString() }}
         </template>
-        <template #durationInMillis-data="{ row }">
-            {{ (row.durationInMillis / 1000).toFixed(1) }}s
+        <template #durationInMillis-cell="{ cell }">
+            {{ (cell.row.original.durationInMillis / 1000).toFixed(1) }}s
         </template>
       </UTable>
     </UCard>
 
     <UCard class="ring-1 ring-gray-200 dark:ring-gray-800">
       <template #header><h3 class="font-bold">Finished Process Instances</h3></template>
-      <UTable :rows="historicProcesses?.data || []" :columns="[{key: 'processDefinitionName', label: 'Process'}, {key: 'endTime', label: 'FinishedAt'}]">
-        <template #endTime-data="{ row }">
-            {{ new Date(row.endTime).toLocaleString() }}
+      <UTable :data="(historicProcesses as any)?.data || []" :columns="[{id: 'processDefinitionName', accessorKey: 'processDefinitionName', header: 'Process'}, {id: 'endTime', accessorKey: 'endTime', header: 'Finished At'}] as any">
+        <template #endTime-cell="{ cell }">
+            {{ new Date(cell.row.original.endTime).toLocaleString() }}
         </template>
       </UTable>
     </UCard>

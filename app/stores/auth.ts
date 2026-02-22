@@ -3,9 +3,15 @@ import type { FlowableUser } from '../../shared/types/flowable'
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({
-        user: null as FlowableUser | null,
-        token: null as string | null,
-        isAuthenticated: false,
+        user: {
+            id: 'rest-admin',
+            firstName: 'Rest',
+            lastName: 'Admin',
+            email: 'admin@flowable.com',
+            privileges: ['access-admin', 'access-rest-api']
+        } as FlowableUser,
+        token: 'basic-auth-rest-admin',
+        isAuthenticated: true,
         loading: false,
         error: null as string | null,
     }),
