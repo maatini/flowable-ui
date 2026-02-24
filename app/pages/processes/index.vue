@@ -4,11 +4,13 @@ const { t } = useI18n()
 const flowable = useFlowable()
 const toast = useToast()
 
-const { data: definitions, refresh: refreshDefs } = await useAsyncData('proc-defs', () => flowable.getProcessDefinitions())
+const { data: definitions, refresh: refreshDefs } = await useAsyncData('proc-defs', () => flowable.getProcessDefinitions({ latest: true }))
 const { data: instances, refresh: refreshInsts } = await useAsyncData('proc-insts', () => flowable.getProcessInstances())
 
 const selectedDef = ref(null)
 const starting = ref(false)
+const uploading = ref(false)
+const fileInput = ref<HTMLInputElement | null>(null)
 
 async function startProcess(definition: any) {
   starting.value = true
@@ -22,6 +24,33 @@ async function startProcess(definition: any) {
     starting.value = false
   }
 }
+
+function triggerFileUpload() {
+  fileInput.value?.click()
+}
+
+async function handleFileUpload(event: Event) {
+  const target = event.target as HTMLInputElement
+  const file = target.files?.[0]
+  if (!file) return
+
+  uploading.value = true
+  try {
+    const formData = new FormData()
+    formData.append('file', file)
+    await flowable.deployProcess(formData)
+    toast.add({ title: 'Process deployed successfully', color: 'success' })
+    await refreshDefs()
+  } catch (error) {
+    toast.add({ title: 'Failed to deploy process', color: 'error' })
+  } finally {
+    uploading.value = false
+    // Reset input
+    if (fileInput.value) {
+      fileInput.value.value = ''
+    }
+  }
+}
 </script>
 
 <template>
@@ -29,7 +58,30 @@ async function startProcess(definition: any) {
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
       <!-- Definitions -->
       <UCard class="ring-1 ring-gray-200 dark:ring-gray-800">
-        <template #header><h3 class="font-bold">Available Processes</h3></template>
+        <template #header>
+          <div class="flex items-center justify-between">
+            <h3 class="font-bold">Available Processes</h3>
+            <div>
+              <input 
+                type="file" 
+                ref="fileInput" 
+                class="hidden" 
+                accept=".xml,.bpmn,.bpmn20.xml" 
+                @change="handleFileUpload" 
+              />
+              <UButton 
+                icon="i-heroicons-arrow-up-tray" 
+                size="sm" 
+                color="primary" 
+                variant="solid" 
+                :loading="uploading"
+                @click="triggerFileUpload"
+              >
+                Upload Process
+              </UButton>
+            </div>
+          </div>
+        </template>
         <UTable :data="(definitions as any)?.data || []" :columns="[{id: 'name', accessorKey: 'name', header: 'Name'}, {id: 'actions', accessorKey: 'id', header: ''}] as any">
           <template #name-cell="{ cell }">
             <NuxtLink :to="`/processes/${cell.row.original.id}`" class="font-bold text-primary-500 hover:text-primary-400 transition-colors">
@@ -49,6 +101,11 @@ async function startProcess(definition: any) {
       <UCard class="ring-1 ring-gray-200 dark:ring-gray-800">
         <template #header><h3 class="font-bold">Active Instances</h3></template>
         <UTable :data="(instances as any)?.data || []" :columns="[{id: 'processDefinitionName', accessorKey: 'processDefinitionName', header: 'Process'}, {id: 'startTime', accessorKey: 'startTime', header: 'Started'}] as any">
+          <template #processDefinitionName-cell="{ cell }">
+            <NuxtLink :to="`/instances/${cell.row.original.id}`" class="font-bold text-primary-500 hover:text-primary-400 transition-colors">
+              {{ cell.row.original.processDefinitionName || 'Unknown Process' }}
+            </NuxtLink>
+          </template>
           <template #startTime-cell="{ cell }">
             {{ new Date((cell.row.original as any).startTime).toLocaleString() }}
           </template>

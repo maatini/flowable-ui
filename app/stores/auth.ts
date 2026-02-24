@@ -3,35 +3,31 @@ import type { FlowableUser } from '../../shared/types/flowable'
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({
-        user: {
-            id: 'rest-admin',
-            firstName: 'Rest',
-            lastName: 'Admin',
-            email: 'admin@flowable.com',
-            privileges: ['access-admin', 'access-rest-api']
-        } as FlowableUser,
-        token: 'basic-auth-rest-admin',
-        isAuthenticated: true,
+        user: {} as FlowableUser,
+        token: '',
+        isAuthenticated: false,
         loading: false,
         error: null as string | null,
     }),
     actions: {
-        async login(credentials: { username: string; password: string; rememberMe: boolean }) {
+        async login(credentials: { username: string; password?: string; rememberMe?: boolean }) {
             this.loading = true
             this.error = null
 
             try {
-                // In a real application, you might call a dedicated auth endpoint
-                // For Flowable Basic Auth, we can verify by calling /identity/users/{id}
-                const data = await $fetch<FlowableUser>(`/api/flowable/identity/users/${credentials.username}`)
+                // By-pass password / API check completely as requested
+                this.user = {
+                    id: credentials.username || 'admin',
+                    firstName: 'Demo',
+                    lastName: 'User',
+                    email: credentials.username + '@flowable.com',
+                    privileges: ['access-admin', 'access-rest-api']
+                }
 
-                this.user = data
                 this.isAuthenticated = true
-                // Set token or other session data if necessary
-
                 return true
             } catch (err: any) {
-                this.error = 'Login failed. Please check your credentials.'
+                this.error = 'Login failed.'
                 this.isAuthenticated = false
                 return false
             } finally {
@@ -39,8 +35,8 @@ export const useAuthStore = defineStore('auth', {
             }
         },
         logout() {
-            this.user = null
-            this.token = null
+            this.user = {} as FlowableUser
+            this.token = ''
             this.isAuthenticated = false
             navigateTo('/login')
         }

@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+  xmlns:flowable="http://flowable.org/bpmn"
+  targetNamespace="Examples">
+
+  <process id="expenseClaim" name="Spesenabrechnung" isExecutable="true">
+    <startEvent id="startEvent" name="Spesen eingereicht" flowable:formKey="expenseForm"/>
+    <sequenceFlow id="flow1" sourceRef="startEvent" targetRef="managerApproval"/>
+    
+    <userTask id="managerApproval" name="Manager Prüfung" flowable:candidateGroups="management">
+      <extensionElements>
+        <flowable:taskListener event="create" class="org.flowable.engine.impl.bpmn.listener.ScriptTaskListener">
+          <flowable:field name="script">
+            <flowable:string><![CDATA[
+              execution.setVariable("status", "pending")
+            ]]></flowable:string>
+          </flowable:field>
+        </flowable:taskListener>
+      </extensionElements>
+    </userTask>
+    <sequenceFlow id="flow2" sourceRef="managerApproval" targetRef="approvalGateway"/>
+    
+    <exclusiveGateway id="approvalGateway" name="Freigegeben?"/>
+    <sequenceFlow id="flowApproved" sourceRef="approvalGateway" targetRef="paymentTask" name="Ja">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${approved == true}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flowRejected" sourceRef="approvalGateway" targetRef="rejectNotification" name="Nein">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${approved == false}]]></conditionExpression>
+    </sequenceFlow>
+    
+    <userTask id="paymentTask" name="Auszahlung durchführen" flowable:candidateGroups="finance"/>
+    <sequenceFlow id="flow3" sourceRef="paymentTask" targetRef="endEventApproved"/>
+    
+    <userTask id="rejectNotification" name="Ablehnung prüfen" flowable:assignee="${initiator}"/>
+    <sequenceFlow id="flow4" sourceRef="rejectNotification" targetRef="endEventRejected"/>
+    
+    <endEvent id="endEventApproved" name="Spesen erstattet"/>
+    <endEvent id="endEventRejected" name="Spesen abgelehnt"/>
+  </process>
+
+  <bpmndi:BPMNDiagram id="BPMNDiagram_expenseClaim">
+    <bpmndi:BPMNPlane bpmnElement="expenseClaim" id="BPMNPlane_expenseClaim">
+      <bpmndi:BPMNShape id="startEvent_di" bpmnElement="startEvent">
+        <dc:Bounds x="100" y="100" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="managerApproval_di" bpmnElement="managerApproval">
+        <dc:Bounds x="200" y="78" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="approvalGateway_di" bpmnElement="approvalGateway">
+        <dc:Bounds x="350" y="93" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="paymentTask_di" bpmnElement="paymentTask">
+        <dc:Bounds x="450" y="30" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="rejectNotification_di" bpmnElement="rejectNotification">
+        <dc:Bounds x="450" y="140" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="endEventApproved_di" bpmnElement="endEventApproved">
+        <dc:Bounds x="600" y="52" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="endEventRejected_di" bpmnElement="endEventRejected">
+        <dc:Bounds x="600" y="162" width="36" height="36" />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNEdge id="flow1_di" bpmnElement="flow1">
+        <di:waypoint x="136" y="118" />
+        <di:waypoint x="200" y="118" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="flow2_di" bpmnElement="flow2">
+        <di:waypoint x="300" y="118" />
+        <di:waypoint x="350" y="118" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="flowApproved_di" bpmnElement="flowApproved">
+        <di:waypoint x="375" y="93" />
+        <di:waypoint x="375" y="70" />
+        <di:waypoint x="450" y="70" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="flowRejected_di" bpmnElement="flowRejected">
+        <di:waypoint x="375" y="143" />
+        <di:waypoint x="375" y="180" />
+        <di:waypoint x="450" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="flow3_di" bpmnElement="flow3">
+        <di:waypoint x="550" y="70" />
+        <di:waypoint x="600" y="70" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="flow4_di" bpmnElement="flow4">
+        <di:waypoint x="550" y="180" />
+        <di:waypoint x="600" y="180" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>

@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import BpmnViewer from 'bpmn-js/lib/Viewer'
-import { layoutProcess } from 'bpmn-auto-layout'
+import BpmnNavigatedViewer from 'bpmn-js/lib/NavigatedViewer'
 import 'bpmn-js/dist/assets/diagram-js.css'
 import 'bpmn-js/dist/assets/bpmn-font/css/bpmn.css'
 import 'bpmn-js/dist/assets/bpmn-js.css'
@@ -8,6 +7,7 @@ import 'bpmn-js/dist/assets/bpmn-js.css'
 const props = defineProps<{
   xml: string
   loading?: boolean
+  activeActivities?: string[]
 }>()
 
 const canvas = ref<HTMLElement | null>(null)
@@ -15,7 +15,7 @@ let viewer: any = null
 
 onMounted(() => {
   if (canvas.value) {
-    viewer = new BpmnViewer({
+    viewer = new BpmnNavigatedViewer({
       container: canvas.value
     })
     if (props.xml) {
@@ -36,26 +36,49 @@ watch(() => props.xml, (newXml) => {
   }
 })
 
+watch(() => props.activeActivities, (newActivities) => {
+    applyHighlights(newActivities)
+}, { deep: true })
+
 async function renderDiagram(xml: string) {
   try {
-    let finalXml = xml
-    
-    // Check if XML contains DI (Diagram Interchange) info
     if (!xml.includes('BPMNDiagram') || !xml.includes('BPMNPlane')) {
-      console.log('No DI info found, applying auto-layout...')
-      try {
-        finalXml = await layoutProcess(xml)
-      } catch (layoutErr) {
-        console.warn('Auto-layout failed, trying original XML:', layoutErr)
-      }
+      console.warn('The provided BPMN XML lacks Diagram Interchange (DI) layout details. Nodes might be missing positions or sequence edges.')
     }
 
-    await viewer.importXML(finalXml)
-    const canvas = viewer.get('canvas')
-    canvas.zoom('fit-viewport')
+    await viewer.importXML(xml)
+    const viewerCanvas = viewer.get('canvas')
+    // Automatically fit diagram into the viewport
+    viewerCanvas.zoom('fit-viewport')
+    
+    // Apply highlights if any
+    applyHighlights(props.activeActivities)
   } catch (err) {
     console.error('Error rendering BPMN diagram:', err)
   }
+}
+
+function applyHighlights(activities?: string[]) {
+    if (!viewer) return
+    const viewerCanvas = viewer.get('canvas')
+    const registry = viewer.get('elementRegistry')
+    
+    // Zuerst alle alten Highlighi-Marker entfernen (vereinfacht: wir clearen überall wo 'highlight' dran ist, 
+    // oder iterieren über alle registry objekte)
+    registry.forEach((element: any) => {
+        if (viewerCanvas.hasMarker(element.id, 'highlight')) {
+            viewerCanvas.removeMarker(element.id, 'highlight')
+        }
+    })
+
+    // Neue Marker setzen
+    if (activities && activities.length > 0) {
+        activities.forEach(id => {
+            if (registry.get(id)) {
+                viewerCanvas.addMarker(id, 'highlight')
+            }
+        })
+    }
 }
 
 function handleZoomIn() {
@@ -91,5 +114,16 @@ function handleResetZoom() {
 <style>
 .bjs-powered-by {
   display: none;
+}
+
+/* Custom Highlight Markers for BPMN Nodes */
+.highlight:not(.djs-connection) .djs-visual > :nth-child(1) {
+  stroke: #10b981 !important; /* Emerald 500 */
+  stroke-width: 4px !important;
+  fill: #ecfdf5 !important;   /* Emerald 50 */
+}
+/* For dark mode */
+.dark .highlight:not(.djs-connection) .djs-visual > :nth-child(1) {
+    fill: #064e3b !important; /* Emerald 900 */
 }
 </style>

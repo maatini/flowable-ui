@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions xmlns="http://www.omg.org/spec/BPMN/20100524/MODEL"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:bpmndi="http://www.omg.org/spec/BPMN/20100524/DI"
+  xmlns:dc="http://www.omg.org/spec/DD/20100524/DC"
+  xmlns:di="http://www.omg.org/spec/DD/20100524/DI"
+  xmlns:flowable="http://flowable.org/bpmn"
+  targetNamespace="Examples">
+
+  <process id="leaveRequest" name="Urlaubsantrag" isExecutable="true">
+    <startEvent id="startEvent" name="Antrag gestellt" flowable:initiator="applicant"/>
+    <sequenceFlow id="flow1" sourceRef="startEvent" targetRef="managerApproval"/>
+    
+    <userTask id="managerApproval" name="Genehmigung durch Vorgesetzten" flowable:candidateGroups="management"/>
+    <sequenceFlow id="flow2" sourceRef="managerApproval" targetRef="approvalGateway"/>
+    
+    <exclusiveGateway id="approvalGateway" name="Genehmigt?"/>
+    <sequenceFlow id="flowApproved" sourceRef="approvalGateway" targetRef="hrNotification" name="Ja">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${approved == true}]]></conditionExpression>
+    </sequenceFlow>
+    <sequenceFlow id="flowRejected" sourceRef="approvalGateway" targetRef="applicantNotification" name="Nein">
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${approved == false}]]></conditionExpression>
+    </sequenceFlow>
+    
+    <serviceTask id="hrNotification" name="HR System aktualisieren" flowable:expression="${hrService.registerLeave(execution)}"/>
+    <sequenceFlow id="flow3" sourceRef="hrNotification" targetRef="endEventApproved"/>
+    
+    <userTask id="applicantNotification" name="Ablehnung einsehen" flowable:assignee="${applicant}"/>
+    <sequenceFlow id="flow4" sourceRef="applicantNotification" targetRef="endEventRejected"/>
+    
+    <endEvent id="endEventApproved" name="Urlaub genehmigt"/>
+    <endEvent id="endEventRejected" name="Urlaub abgelehnt"/>
+  </process>
+
+  <bpmndi:BPMNDiagram id="BPMNDiagram_leaveRequest">
+    <bpmndi:BPMNPlane bpmnElement="leaveRequest" id="BPMNPlane_leaveRequest">
+      <bpmndi:BPMNShape id="startEvent_di" bpmnElement="startEvent">
+        <dc:Bounds x="100" y="100" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="managerApproval_di" bpmnElement="managerApproval">
+        <dc:Bounds x="200" y="78" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="approvalGateway_di" bpmnElement="approvalGateway">
+        <dc:Bounds x="350" y="93" width="50" height="50" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="hrNotification_di" bpmnElement="hrNotification">
+        <dc:Bounds x="450" y="30" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="applicantNotification_di" bpmnElement="applicantNotification">
+        <dc:Bounds x="450" y="140" width="100" height="80" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="endEventApproved_di" bpmnElement="endEventApproved">
+        <dc:Bounds x="600" y="52" width="36" height="36" />
+      </bpmndi:BPMNShape>
+      <bpmndi:BPMNShape id="endEventRejected_di" bpmnElement="endEventRejected">
+        <dc:Bounds x="600" y="162" width="36" height="36" />
+      </bpmndi:BPMNShape>
+
+      <bpmndi:BPMNEdge id="flow1_di" bpmnElement="flow1">
+        <di:waypoint x="136" y="118" />
+        <di:waypoint x="200" y="118" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="flow2_di" bpmnElement="flow2">
+        <di:waypoint x="300" y="118" />
+        <di:waypoint x="350" y="118" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="flowApproved_di" bpmnElement="flowApproved">
+        <di:waypoint x="375" y="93" />
+        <di:waypoint x="375" y="70" />
+        <di:waypoint x="450" y="70" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="flowRejected_di" bpmnElement="flowRejected">
+        <di:waypoint x="375" y="143" />
+        <di:waypoint x="375" y="180" />
+        <di:waypoint x="450" y="180" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="flow3_di" bpmnElement="flow3">
+        <di:waypoint x="550" y="70" />
+        <di:waypoint x="600" y="70" />
+      </bpmndi:BPMNEdge>
+      <bpmndi:BPMNEdge id="flow4_di" bpmnElement="flow4">
+        <di:waypoint x="550" y="180" />
+        <di:waypoint x="600" y="180" />
+      </bpmndi:BPMNEdge>
+    </bpmndi:BPMNPlane>
+  </bpmndi:BPMNDiagram>
+</definitions>
