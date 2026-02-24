@@ -29,6 +29,9 @@ export const useFlowable = () => {
         startProcess: (data: any) => apiFetch('/runtime/process-instances', { method: 'POST', body: data }),
         completeTask: (id: string, data: any) => apiFetch(`/runtime/tasks/${id}`, { method: 'POST', body: { action: 'complete', ...data } }),
         deployProcess: (formData: FormData) => apiFetch('/repository/deployments', { method: 'POST', body: formData }),
+        getProcessInstanceVariables: (instanceId: string) => apiFetch(`/runtime/process-instances/${instanceId}/variables`),
+        updateProcessInstanceVariable: (instanceId: string, name: string, data: any) => apiFetch(`/runtime/process-instances/${instanceId}/variables/${name}`, { method: 'PUT', body: data }),
+        deleteProcessInstanceVariable: (instanceId: string, name: string) => apiFetch(`/runtime/process-instances/${instanceId}/variables/${name}`, { method: 'DELETE' }),
         // Add more as needed
     }
 }

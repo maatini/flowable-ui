@@ -62,9 +62,17 @@ async function handleLogin() {
                 autofocus 
                 class="w-full" 
               />
+            </UFormField>            <UFormField :label="t('common.password')" name="password">
+              <UInput 
+                v-model="state.password" 
+                type="password"
+                icon="i-heroicons-lock-closed" 
+                placeholder="••••" 
+                size="xl"
+                variant="subtle"
+                class="w-full" 
+              />
             </UFormField>
-
-
 
             <div class="flex items-center justify-between">
               <UCheckbox v-model="state.rememberMe" :label="t('common.rememberMe')" />

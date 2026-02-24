@@ -29,5 +29,25 @@
         "dueDate": "Due Date",
         "assignee": "Assignee",
         "status": "Status"
+    },
+    "processes": {
+        "title": "Processes",
+        "startProcess": "Start Process",
+        "startWithContext": "Start with Context",
+        "variables": "Variables",
+        "addVariable": "Add Variable",
+        "name": "Name",
+        "value": "Value",
+        "type": "Type",
+        "noVariables": "No variables defined.",
+        "delete": "Delete",
+        "edit": "Edit",
+        "save": "Save",
+        "types": {
+            "string": "String",
+            "integer": "Integer",
+            "boolean": "Boolean",
+            "date": "Date"
+        }
     }
 }

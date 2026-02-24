@@ -29,5 +29,25 @@
         "dueDate": "Fälligkeitsdatum",
         "assignee": "Bearbeiter",
         "status": "Status"
+    },
+    "processes": {
+        "title": "Prozesse",
+        "startProcess": "Prozess starten",
+        "startWithContext": "Mit Kontext starten",
+        "variables": "Variablen",
+        "addVariable": "Variable hinzufügen",
+        "name": "Name",
+        "value": "Wert",
+        "type": "Typ",
+        "noVariables": "Keine Variablen definiert.",
+        "delete": "Löschen",
+        "edit": "Bearbeiten",
+        "save": "Speichern",
+        "types": {
+            "string": "Text",
+            "integer": "Ganze Zahl",
+            "boolean": "Wahrheitswert",
+            "date": "Datum"
+        }
     }
 }

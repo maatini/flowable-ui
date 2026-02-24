@@ -8,21 +8,17 @@ const { data: definitions, refresh: refreshDefs } = await useAsyncData('proc-def
 const { data: instances, refresh: refreshInsts } = await useAsyncData('proc-insts', () => flowable.getProcessInstances())
 
 const selectedDef = ref(null)
-const starting = ref(false)
+const showStartModal = ref(false)
 const uploading = ref(false)
 const fileInput = ref<HTMLInputElement | null>(null)
 
-async function startProcess(definition: any) {
-  starting.value = true
-  try {
-    await flowable.startProcess({ processDefinitionId: definition.id })
-    toast.add({ title: 'Process started', color: 'success' })
-    refreshInsts()
-  } catch (error) {
-    toast.add({ title: 'Failed to start process', color: 'error' })
-  } finally {
-    starting.value = false
-  }
+function openStartModal(definition: any) {
+  selectedDef.value = definition
+  showStartModal.value = true
+}
+
+async function onProcessStarted() {
+  await refreshInsts()
 }
 
 function triggerFileUpload() {
@@ -84,14 +80,32 @@ async function handleFileUpload(event: Event) {
         </template>
         <UTable :data="(definitions as any)?.data || []" :columns="[{id: 'name', accessorKey: 'name', header: 'Name'}, {id: 'actions', accessorKey: 'id', header: ''}] as any">
           <template #name-cell="{ cell }">
-            <NuxtLink :to="`/processes/${cell.row.original.id}`" class="font-bold text-primary-500 hover:text-primary-400 transition-colors">
-              {{ cell.row.original.name || 'Untitled Process' }}
+            <NuxtLink 
+              :to="`/processes/${(cell.row.original as any).id}`" 
+              class="font-bold text-primary-500 hover:text-primary-400 transition-colors"
+              :data-testid="`process-link-${(cell.row.original as any).key}`"
+            >
+              {{ (cell.row.original as any).name || 'Untitled Process' }}
             </NuxtLink>
           </template>
           <template #actions-cell="{ cell }">
             <div class="flex items-center gap-2">
-              <UButton icon="i-heroicons-eye" size="xs" color="neutral" variant="ghost" :to="`/processes/${cell.row.original.id}`" />
-              <UButton icon="i-heroicons-play" size="xs" color="neutral" variant="ghost" @click="startProcess(cell.row.original)" />
+              <UButton 
+                icon="i-heroicons-eye" 
+                size="xs" 
+                color="neutral" 
+                variant="ghost" 
+                :to="`/processes/${(cell.row.original as any).id}`" 
+                data-testid="view-process"
+              />
+              <UButton 
+                icon="i-heroicons-play" 
+                size="xs" 
+                color="neutral" 
+                variant="ghost" 
+                @click="openStartModal(cell.row.original)" 
+                data-testid="start-process"
+              />
             </div>
           </template>
         </UTable>
@@ -102,8 +116,8 @@ async function handleFileUpload(event: Event) {
         <template #header><h3 class="font-bold">Active Instances</h3></template>
         <UTable :data="(instances as any)?.data || []" :columns="[{id: 'processDefinitionName', accessorKey: 'processDefinitionName', header: 'Process'}, {id: 'startTime', accessorKey: 'startTime', header: 'Started'}] as any">
           <template #processDefinitionName-cell="{ cell }">
-            <NuxtLink :to="`/instances/${cell.row.original.id}`" class="font-bold text-primary-500 hover:text-primary-400 transition-colors">
-              {{ cell.row.original.processDefinitionName || 'Unknown Process' }}
+            <NuxtLink :to="`/instances/${(cell.row.original as any).id}`" class="font-bold text-primary-500 hover:text-primary-400 transition-colors">
+              {{ (cell.row.original as any).processDefinitionName || 'Unknown Process' }}
             </NuxtLink>
           </template>
           <template #startTime-cell="{ cell }">
@@ -112,5 +126,12 @@ async function handleFileUpload(event: Event) {
         </UTable>
       </UCard>
     </div>
+
+    <!-- Start Process Modal -->
+    <FlowableStartProcessModal
+      v-model="showStartModal"
+      :definition="selectedDef"
+      @success="onProcessStarted"
+    />
   </div>
 </template>

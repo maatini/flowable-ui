@@ -89,6 +89,8 @@ definePageMeta({
                 </div>
             </dl>
         </UCard>
+
+        <FlowableInstanceVariablesCard :instanceId="id" />
     </div>
   </div>
 </template>

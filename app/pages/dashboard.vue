@@ -15,28 +15,28 @@ const stats = ref([
 
 const { data: response, pending, refresh: refreshTasks } = await useAsyncData('dashboard-tasks', () => flowable.getTasks({ size: 5 }))
 const { data: procResponse, refresh: refreshProcesses } = await useAsyncData('dashboard-processes', () => flowable.getProcessInstances({ size: 5 }))
-
+const { data: simpleProcessDef } = await useAsyncData('simple-process-def', () => flowable.getProcessDefinitions({ key: 'simpleProcess', latest: true }))
 
 const toast = useToast()
+const showStartModal = ref(false)
+const selectedDef = ref(null)
 
-const startWorkflow = async () => {
-  try {
-    await flowable.startProcess({
-      processDefinitionKey: 'simpleProcess'
-    })
-    toast.add({
-      title: 'Success',
-      description: 'Process started successfully',
-      color: 'success'
-    })
-    await Promise.all([refreshTasks(), refreshProcesses()])
-  } catch (error) {
+const startWorkflow = () => {
+  const def = (simpleProcessDef.value as any)?.data?.[0]
+  if (def) {
+    selectedDef.value = def
+    showStartModal.value = true
+  } else {
     toast.add({
       title: 'Error',
-      description: 'Failed to start process',
+      description: 'Process "simpleProcess" not found. Please deploy it first.',
       color: 'error'
     })
   }
+}
+
+const onProcessStarted = async () => {
+  await Promise.all([refreshTasks(), refreshProcesses()])
 }
 
 const dashColumns = [
@@ -46,10 +46,10 @@ const dashColumns = [
 
 watchEffect(() => {
   if (response.value) {
-    stats.value[0].value = (response.value as any).total.toString()
+    (stats.value[0] as any).value = (response.value as any).total.toString()
   }
   if (procResponse.value) {
-    stats.value[1].value = (procResponse.value as any).total.toString()
+    (stats.value[1] as any).value = (procResponse.value as any).total.toString()
   }
 })
 </script>
@@ -97,13 +97,13 @@ watchEffect(() => {
           :loading="pending"
         >
           <template #name-cell="{ cell }">
-            <NuxtLink :to="`/tasks/${cell.row.original.id}`" class="font-bold text-primary-500 hover:text-primary-400 transition-colors">
-              {{ cell.row.original.name || 'Untitled Task' }}
+            <NuxtLink :to="`/tasks/${(cell.row.original as any).id}`" class="font-bold text-primary-500 hover:text-primary-400 transition-colors">
+              {{ (cell.row.original as any).name || 'Untitled Task' }}
             </NuxtLink>
           </template>
           <template #createTime-cell="{ cell }">
             <span class="text-xs font-medium text-slate-500">
-              {{ cell.row.original.createTime ? new Date(cell.row.original.createTime).toLocaleDateString() : 'N/A' }}
+              {{ (cell.row.original as any).createTime ? new Date((cell.row.original as any).createTime).toLocaleDateString() : 'N/A' }}
             </span>
           </template>
         </UTable>
@@ -146,5 +146,12 @@ watchEffect(() => {
         </div>
       </UCard>
     </div>
+
+    <!-- Start Process Modal -->
+    <FlowableStartProcessModal
+      v-model="showStartModal"
+      :definition="selectedDef"
+      @success="onProcessStarted"
+    />
   </div>
 </template>

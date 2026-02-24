@@ -1,0 +1,222 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e1]:
+  - generic [ref=e3]:
+    - complementary [ref=e4]:
+      - generic [ref=e5]:
+        - generic [ref=e6]: F
+        - generic [ref=e7]:
+          - heading "Flowable" [level=1] [ref=e8]
+          - paragraph [ref=e9]: Intelligence
+      - navigation "Main" [ref=e11]:
+        - list [ref=e12]:
+          - listitem [ref=e13]:
+            - link "Dashboard" [ref=e14] [cursor=pointer]:
+              - /url: /dashboard
+              - generic [ref=e16]: Dashboard
+          - listitem [ref=e17]:
+            - link "Tasks" [ref=e18] [cursor=pointer]:
+              - /url: /tasks
+              - generic [ref=e20]: Tasks
+          - listitem [ref=e21]:
+            - link "Processes" [ref=e22] [cursor=pointer]:
+              - /url: /processes
+              - generic [ref=e24]: Processes
+          - listitem [ref=e25]:
+            - link "History" [ref=e26] [cursor=pointer]:
+              - /url: /history
+              - generic [ref=e28]: History
+          - listitem [ref=e29]:
+            - link "Admin" [ref=e30] [cursor=pointer]:
+              - /url: /admin
+              - generic [ref=e32]: Admin
+      - generic [ref=e33]:
+        - generic [ref=e34]:
+          - button [ref=e35]
+          - button "Show popup" [ref=e37]:
+            - generic: en
+        - generic [ref=e42]: Guest Mode
+    - main [ref=e43]:
+      - generic [ref=e44]:
+        - heading "Processes" [level=2] [ref=e46]
+        - generic [ref=e47]:
+          - button [ref=e48]
+          - button [ref=e50]
+      - generic [ref=e54]:
+        - generic [ref=e55]:
+          - generic [ref=e56]:
+            - generic [ref=e58]:
+              - heading "Available Processes" [level=3] [ref=e59]
+              - button "Upload Process" [ref=e61]: Upload Process
+            - table [ref=e65]:
+              - rowgroup [ref=e66]:
+                - row "Name" [ref=e67]:
+                  - columnheader "Name" [ref=e68]
+                  - columnheader [ref=e69]
+                - row [ref=e70]
+              - rowgroup [ref=e71]:
+                - row "Bestellabwicklung" [ref=e72]:
+                  - cell "Bestellabwicklung" [ref=e73]:
+                    - link "Bestellabwicklung" [ref=e74] [cursor=pointer]:
+                      - /url: /processes/orderFulfillment:2:88db353e-114c-11f1-8307-b6e7a230d06e
+                  - cell [ref=e75]:
+                    - generic [ref=e76]:
+                      - link [ref=e77] [cursor=pointer]:
+                        - /url: /processes/orderFulfillment:2:88db353e-114c-11f1-8307-b6e7a230d06e
+                      - button [ref=e79]
+                - row "Create timers process" [ref=e81]:
+                  - cell "Create timers process" [ref=e82]:
+                    - link "Create timers process" [ref=e83] [cursor=pointer]:
+                      - /url: /processes/createTimersProcess:1:3f0e4a14-10fc-11f1-a69d-8af8a1aa9bdc
+                  - cell [ref=e84]:
+                    - generic [ref=e85]:
+                      - link [ref=e86] [cursor=pointer]:
+                        - /url: /processes/createTimersProcess:1:3f0e4a14-10fc-11f1-a69d-8af8a1aa9bdc
+                      - button [ref=e88]
+                - row "Einfacher Prozess" [ref=e90]:
+                  - cell "Einfacher Prozess" [ref=e91]:
+                    - link "Einfacher Prozess" [ref=e92] [cursor=pointer]:
+                      - /url: /processes/simpleProcess:13:06f9f16f-11a7-11f1-9999-ca60b0edba63
+                  - cell [ref=e93]:
+                    - generic [ref=e94]:
+                      - link [ref=e95] [cursor=pointer]:
+                        - /url: /processes/simpleProcess:13:06f9f16f-11a7-11f1-9999-ca60b0edba63
+                      - button [active] [ref=e97]
+                - row "Famous One Task Process" [ref=e99]:
+                  - cell "Famous One Task Process" [ref=e100]:
+                    - link "Famous One Task Process" [ref=e101] [cursor=pointer]:
+                      - /url: /processes/oneTaskProcess:1:3f0e4a13-10fc-11f1-a69d-8af8a1aa9bdc
+                  - cell [ref=e102]:
+                    - generic [ref=e103]:
+                      - link [ref=e104] [cursor=pointer]:
+                        - /url: /processes/oneTaskProcess:1:3f0e4a13-10fc-11f1-a69d-8af8a1aa9bdc
+                      - button [ref=e106]
+                - row "Fix system failure" [ref=e108]:
+                  - cell "Fix system failure" [ref=e109]:
+                    - link "Fix system failure" [ref=e110] [cursor=pointer]:
+                      - /url: /processes/fixSystemFailure:1:3f0e4a10-10fc-11f1-a69d-8af8a1aa9bdc
+                  - cell [ref=e111]:
+                    - generic [ref=e112]:
+                      - link [ref=e113] [cursor=pointer]:
+                        - /url: /processes/fixSystemFailure:1:3f0e4a10-10fc-11f1-a69d-8af8a1aa9bdc
+                      - button [ref=e115]
+                - row "Helpdesk process" [ref=e117]:
+                  - cell "Helpdesk process" [ref=e118]:
+                    - link "Helpdesk process" [ref=e119] [cursor=pointer]:
+                      - /url: /processes/escalationExample:1:3f0e4a12-10fc-11f1-a69d-8af8a1aa9bdc
+                  - cell [ref=e120]:
+                    - generic [ref=e121]:
+                      - link [ref=e122] [cursor=pointer]:
+                        - /url: /processes/escalationExample:1:3f0e4a12-10fc-11f1-a69d-8af8a1aa9bdc
+                      - button [ref=e124]
+                - row "Onboarding Prozess" [ref=e126]:
+                  - cell "Onboarding Prozess" [ref=e127]:
+                    - link "Onboarding Prozess" [ref=e128] [cursor=pointer]:
+                      - /url: /processes/onboardingProcess:2:88d2348a-114c-11f1-8307-b6e7a230d06e
+                  - cell [ref=e129]:
+                    - generic [ref=e130]:
+                      - link [ref=e131] [cursor=pointer]:
+                        - /url: /processes/onboardingProcess:2:88d2348a-114c-11f1-8307-b6e7a230d06e
+                      - button [ref=e133]
+                - row "Review sales lead" [ref=e135]:
+                  - cell "Review sales lead" [ref=e136]:
+                    - link "Review sales lead" [ref=e137] [cursor=pointer]:
+                      - /url: /processes/reviewSaledLead:1:3f0e4a11-10fc-11f1-a69d-8af8a1aa9bdc
+                  - cell [ref=e138]:
+                    - generic [ref=e139]:
+                      - link [ref=e140] [cursor=pointer]:
+                        - /url: /processes/reviewSaledLead:1:3f0e4a11-10fc-11f1-a69d-8af8a1aa9bdc
+                      - button [ref=e142]
+                - row "Spesenabrechnung" [ref=e144]:
+                  - cell "Spesenabrechnung" [ref=e145]:
+                    - link "Spesenabrechnung" [ref=e146] [cursor=pointer]:
+                      - /url: /processes/expenseClaim:3:3b593838-114e-11f1-8307-b6e7a230d06e
+                  - cell [ref=e147]:
+                    - generic [ref=e148]:
+                      - link [ref=e149] [cursor=pointer]:
+                        - /url: /processes/expenseClaim:3:3b593838-114e-11f1-8307-b6e7a230d06e
+                      - button [ref=e151]
+                - row "Urlaubsantrag" [ref=e153]:
+                  - cell "Urlaubsantrag" [ref=e154]:
+                    - link "Urlaubsantrag" [ref=e155] [cursor=pointer]:
+                      - /url: /processes/leaveRequest:3:339b1a54-114e-11f1-8307-b6e7a230d06e
+                  - cell [ref=e156]:
+                    - generic [ref=e157]:
+                      - link [ref=e158] [cursor=pointer]:
+                        - /url: /processes/leaveRequest:3:339b1a54-114e-11f1-8307-b6e7a230d06e
+                      - button [ref=e160]
+          - generic [ref=e162]:
+            - heading "Active Instances" [level=3] [ref=e164]
+            - table [ref=e167]:
+              - rowgroup [ref=e168]:
+                - row "Process Started" [ref=e169]:
+                  - columnheader "Process" [ref=e170]
+                  - columnheader "Started" [ref=e171]
+                - row [ref=e172]
+              - rowgroup [ref=e173]:
+                - row "Einfacher Prozess 2/24/2026, 6:34:09 PM" [ref=e174]:
+                  - cell "Einfacher Prozess" [ref=e175]:
+                    - link "Einfacher Prozess" [ref=e176] [cursor=pointer]:
+                      - /url: /instances/06cc0395-11a7-11f1-9999-ca60b0edba63
+                  - cell "2/24/2026, 6:34:09 PM" [ref=e177]
+                - row "Einfacher Prozess 2/24/2026, 8:57:29 PM" [ref=e178]:
+                  - cell "Einfacher Prozess" [ref=e179]:
+                    - link "Einfacher Prozess" [ref=e180] [cursor=pointer]:
+                      - /url: /instances/0cead95d-11bb-11f1-9999-ca60b0edba63
+                  - cell "2/24/2026, 8:57:29 PM" [ref=e181]
+                - row "Einfacher Prozess 2/24/2026, 7:53:09 AM" [ref=e182]:
+                  - cell "Einfacher Prozess" [ref=e183]:
+                    - link "Einfacher Prozess" [ref=e184] [cursor=pointer]:
+                      - /url: /instances/7ae09b07-114d-11f1-8307-b6e7a230d06e
+                  - cell "2/24/2026, 7:53:09 AM" [ref=e185]
+                - row "Einfacher Prozess 2/24/2026, 8:00:23 AM" [ref=e186]:
+                  - cell "Einfacher Prozess" [ref=e187]:
+                    - link "Einfacher Prozess" [ref=e188] [cursor=pointer]:
+                      - /url: /instances/7d6d1cf9-114e-11f1-8307-b6e7a230d06e
+                  - cell "2/24/2026, 8:00:23 AM" [ref=e189]
+                - row "Einfacher Prozess 2/24/2026, 8:14:49 AM" [ref=e190]:
+                  - cell "Einfacher Prozess" [ref=e191]:
+                    - link "Einfacher Prozess" [ref=e192] [cursor=pointer]:
+                      - /url: /instances/81a55db0-1150-11f1-8307-b6e7a230d06e
+                  - cell "2/24/2026, 8:14:49 AM" [ref=e193]
+                - row "Einfacher Prozess 2/24/2026, 8:07:51 AM" [ref=e194]:
+                  - cell "Einfacher Prozess" [ref=e195]:
+                    - link "Einfacher Prozess" [ref=e196] [cursor=pointer]:
+                      - /url: /instances/889f5da3-114f-11f1-8307-b6e7a230d06e
+                  - cell "2/24/2026, 8:07:51 AM" [ref=e197]
+                - row "Einfacher Prozess 2/24/2026, 8:01:50 AM" [ref=e198]:
+                  - cell "Einfacher Prozess" [ref=e199]:
+                    - link "Einfacher Prozess" [ref=e200] [cursor=pointer]:
+                      - /url: /instances/b1210b76-114e-11f1-8307-b6e7a230d06e
+                  - cell "2/24/2026, 8:01:50 AM" [ref=e201]
+                - row "Urlaubsantrag 2/24/2026, 8:16:39 AM" [ref=e202]:
+                  - cell "Urlaubsantrag" [ref=e203]:
+                    - link "Urlaubsantrag" [ref=e204] [cursor=pointer]:
+                      - /url: /instances/c31a1c55-1150-11f1-8307-b6e7a230d06e
+                  - cell "2/24/2026, 8:16:39 AM" [ref=e205]
+                - row "Einfacher Prozess 2/24/2026, 7:55:22 AM" [ref=e206]:
+                  - cell "Einfacher Prozess" [ref=e207]:
+                    - link "Einfacher Prozess" [ref=e208] [cursor=pointer]:
+                      - /url: /instances/ca2b3864-114d-11f1-8307-b6e7a230d06e
+                  - cell "2/24/2026, 7:55:22 AM" [ref=e209]
+                - row "Einfacher Prozess 2/24/2026, 8:41:57 PM" [ref=e210]:
+                  - cell "Einfacher Prozess" [ref=e211]:
+                    - link "Einfacher Prozess" [ref=e212] [cursor=pointer]:
+                      - /url: /instances/e15451b0-11b8-11f1-9999-ca60b0edba63
+                  - cell "2/24/2026, 8:41:57 PM" [ref=e213]
+        - generic [ref=e214]:
+          - generic [ref=e216]:
+            - 'heading "Start Process: Einfacher Prozess" [level=3] [ref=e217]'
+            - button [ref=e218]
+          - generic [ref=e221]:
+            - generic [ref=e222]:
+              - heading "Variables" [level=4] [ref=e223]
+              - button "Add Variable" [ref=e224]: Add Variable
+            - paragraph [ref=e227]: No variables defined.
+          - generic [ref=e229]:
+            - button "Cancel" [ref=e230]
+            - button "Start Process" [ref=e231]: Start Process
+  - region "Notifications (F8)":
+    - list
+```
